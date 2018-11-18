@@ -6,6 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.4",
-    "rp": "^0.2.0"
+    "request-promise": "^4.2.2"
   }
 }
