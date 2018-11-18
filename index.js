@@ -2,6 +2,7 @@ const express = require('express');
 const rp = require('request-promise');
 
 const app = express();
+app.use(express.bodyParser());
 
 const specialGift = {
 
