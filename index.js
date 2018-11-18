@@ -23,7 +23,11 @@ app.post('/webhooks', async (req, res, next) => {
 	const switchBoard = {
 		cartLookUp: {
 			method: 'GET',
-			uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`
+			headers: {
+				['X-Auth-Client']: process.env.X_AUTH_CLIENT,
+				['X-Auth-Token']: process.env.X_AUTH_TOKEN,
+			},
+			uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`,
 		}
 	}
 
