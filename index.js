@@ -14,9 +14,21 @@ const initailizeHooks = () => {
 
 }
 
-app.post('/webhooks', (req, res, next) => {
+const storeHash = 'h3sfhsws7q'
+app.post('/webhooks', async (req, res, next) => {
 	console.log("Hook Received.");
 	console.log(req.body);
+	const cartID = req.body.data.cartId
+
+	const switchBoard = {
+		cartLookUp: {
+			method: 'GET',
+			uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`
+		}
+	}
+
+	const cartOnDeck = await rp(options)
+	console.log(cartOnDeck)
 	res.send('OK')
 });
 
@@ -33,6 +45,17 @@ console.log(`Webhook Gift Server listening on ${port}`);
 
 
 /*
+
+Sample Request Options
+
+	var options = {
+	    method: 'POST',
+	    uri: 'http://api.posttestserver.com/post',
+	    body: {
+	        some: 'payload'
+	    },
+	    json: true // Automatically stringifies the body to JSON
+	};
 
 Hook Initializer Request
 
