@@ -17,8 +17,7 @@ const initailizeHooks = () => {
 app.post('/webhooks', (req, res, next) => {
 	console.log("Hook Received.");
 	console.log(req.body);
-	console.log(req)
-	res.end()
+	res.send('OK')
 });
 
 app.get('*', (req, res) => {
