@@ -1,0 +1,11 @@
+{
+  "name": "bigcommerce-gift-webhooks",
+  "version": "1.0.0",
+  "description": "This server receives WebHooks from BigCommerce and initializes custom actions in response",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "rp": "^0.2.0"
+  }
+}
