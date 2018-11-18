@@ -4,6 +4,9 @@
   "description": "This server receives WebHooks from BigCommerce and initializes custom actions in response",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.16.4",
     "request": "^2.88.0",
