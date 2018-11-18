@@ -27,7 +27,8 @@ app.post('/webhooks', async (req, res, next) => {
 		}
 	}
 
-	const cartOnDeck = rp(switchBoard.cartLookUp)
+	const cartOnDeck = await rp(switchBoard.cartLookUp)
+	console.log(cartOnDeck)
 	res.send('OK')
 });
 
