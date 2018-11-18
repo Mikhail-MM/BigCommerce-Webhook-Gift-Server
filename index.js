@@ -4,7 +4,7 @@ const rp = require('request-promise');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 const specialGift = {
 
