@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios')
 const bodyParser = require('body-parser')
 const rp = require('request-promise');
 
@@ -20,7 +21,6 @@ const storeHash = 'h3sfhsws7q'
 app.post('/webhooks', async (req, res, next) => {
 	try {
 		const gift = {
-			"line_items": {},
 		    "custom_items": [
 		        {
 		            "name": "Miniature Home Terrarium",
@@ -69,9 +69,23 @@ app.post('/webhooks', async (req, res, next) => {
 		
 		if (eligibleForGift) {
 			console.log("Cart Eligible for Gift.")
-			const giftAddedCart = await rp(switchBoard.giftEntry).json();
-			console.log("Cart updated with gift.")
-			console.log(giftAddedCart.body.errors);
+			// const giftAddedCart = await rp(switchBoard.giftEntry).json();
+			const response = await axios({
+				  method: 'post',
+				  url: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
+				  headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
+				  data: {
+				    "custom_items": [
+				        {
+				            "name": "Miniature Home Terrarium",
+				            "sku": "GIFT-AZXt",
+				            "quantity": 1,
+				            "list_price": 0
+				        }
+				    ]
+				}
+			});
+			console.log(response.body.errors);
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
 			const gift = giftItems[0];
