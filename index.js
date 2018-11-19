@@ -29,7 +29,7 @@ app.post('/webhooks', async (req, res, next) => {
 			},
 			giftEntry: {
 				method: 'POST',
-				headers: AuthHeaders,
+				headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
 				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
 				body: {
 					"custom_items": [
