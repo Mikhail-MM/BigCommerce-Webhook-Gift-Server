@@ -32,12 +32,12 @@ app.post('/webhooks', async (req, res, next) => {
 				headers: AuthHeaders,
 				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
 				body: {
-					custom_items: [
+					"custom_items": [
 						{
-							name: 'Miniature Home Terrarium',
-							sku: 'GIFT-AZXt',
-							quantity: 1,
-							list_price: 0,
+							"name": "Miniature Home Terrarium",
+							"sku": "GIFT-AZXt",
+							"quantity": 1,
+							"list_price": 0
 						}
 					]
 				},
