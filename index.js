@@ -19,9 +19,9 @@ const storeHash = 'h3sfhsws7q'
 
 app.post('/webhooks', async (req, res, next) => {
 	try {
-		console.log("Webhook Response")
-		const cartID = req.body.data.cartId
-		console.log(req.body)
+		console.log("Webhook Response");
+		const cartID = req.body.data.cartId;
+		console.log(req.body);
 		const switchBoard = {
 			cartLookUp: {
 				method: 'GET',
@@ -57,11 +57,10 @@ app.post('/webhooks', async (req, res, next) => {
 		const giftItems = cartOnDeck.data.line_items.custom_items;
 		
 		if (giftItems.length > 0) {
-			console.log("Logging Gift")
-			console.log(giftItems[0])
+			console.log("Logging Gift");
+			console.log(giftItems[0]);
 		}
 
-		console.log(eligibleForGift)
 		const eligibleForGift = (cartTotal >= 40 && giftItems.length === 0);
 		const giftRemovalRequired = (cartTotal < 40 && giftItems.length > 0);
 		
@@ -75,12 +74,12 @@ app.post('/webhooks', async (req, res, next) => {
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
 			const gift = giftItems[0];
-				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${gift.id}`
+				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${gift.id}`;
 				const giftRemovedCart = await rp(switchBoard.giftRemoval).json();
 		} else {
-			console.log("No post-webhook actions required.")
+			console.log("No post-webhook actions required.");
 		}
-		res.send('OK')
+		res.send('OK');
 
 	} catch(err) { console.log(err); }
 });
