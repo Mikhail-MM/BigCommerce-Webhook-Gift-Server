@@ -21,7 +21,6 @@ app.post('/webhooks', async (req, res, next) => {
 	try {
 		console.log("Webhook Response");
 		const cartID = req.body.data.cartId;
-		console.log(req.body);
 		const switchBoard = {
 			cartLookUp: {
 				method: 'GET',
@@ -35,13 +34,12 @@ app.post('/webhooks', async (req, res, next) => {
 				body: {
 					custom_items: [
 						{
-							name: '[REWARD]: Miniature Home Terrarium',
+							name: 'Miniature Home Terrarium',
 							sku: 'GIFT-AZXt',
 							quantity: 1,
 							list_price: 0,
-							image_url: 'https://cdn11.bigcommerce.com/s-h3sfhsws7q/images/stencil/500x659/products/81/273/roundterrariumsmall.1435946629.jpg',
-						},
-					],
+						}
+					]
 				},
 				json: true,
 			},
