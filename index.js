@@ -20,6 +20,7 @@ const storeHash = 'h3sfhsws7q'
 app.post('/webhooks', async (req, res, next) => {
 	try {
 		const gift = {
+			"line_items": {},
 		    "custom_items": [
 		        {
 		            "name": "Miniature Home Terrarium",
@@ -29,7 +30,7 @@ app.post('/webhooks', async (req, res, next) => {
 		        }
 		    ]
 		}
-		
+
 		console.log("Webhook Response");
 		const cartID = req.body.data.cartId;
 		const switchBoard = {
@@ -42,7 +43,7 @@ app.post('/webhooks', async (req, res, next) => {
 				method: 'POST',
 				headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
 				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
-				body: gift,
+				body: JSON.stringify(gift),
 				json: true,
 			},
 			giftRemoval: {
