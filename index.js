@@ -69,7 +69,6 @@ app.post('/webhooks', async (req, res, next) => {
 		
 		if (eligibleForGift) {
 			console.log("Cart Eligible for Gift.")
-			// const giftAddedCart = await rp(switchBoard.giftEntry).json();
 			const response = await axios({
 				  method: 'post',
 				  url: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
@@ -85,7 +84,6 @@ app.post('/webhooks', async (req, res, next) => {
 				    ]
 				}
 			});
-			console.log(response.body.errors);
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
 			const gift = giftItems[0];
