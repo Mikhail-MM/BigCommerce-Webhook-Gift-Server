@@ -16,24 +16,29 @@ const initailizeHooks = () => {
 
 const storeHash = 'h3sfhsws7q'
 app.post('/webhooks', async (req, res, next) => {
-	console.log("Hook Received.");
-	console.log(req.body);
-	const cartID = req.body.data.cartId
+	try {
+		console.log("Hook Received.");
+		console.log(req.body);
+		const cartID = req.body.data.cartId
 
-	const switchBoard = {
-		cartLookUp: {
-			method: 'GET',
-			headers: {
-				['X-Auth-Client']: process.env.X_AUTH_CLIENT,
-				['X-Auth-Token']: process.env.X_AUTH_TOKEN,
-			},
-			uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`,
+		const switchBoard = {
+			cartLookUp: {
+				method: 'GET',
+				headers: {
+					['X-Auth-Client']: process.env.X_AUTH_CLIENT,
+					['X-Auth-Token']: process.env.X_AUTH_TOKEN,
+				},
+				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`,
+			}
 		}
-	}
 
-	const cartOnDeck = await rp(switchBoard.cartLookUp)
-	console.log(cartOnDeck)
-	res.send('OK')
+		const cartOnDeck = await rp(switchBoard.cartLookUp);
+		const totalPrice = cartOnDeck.data.cart_amount;
+		const gift = cartOnDeck.data.custom_items[0]
+		console.log(`Cart has ${totalPrice}`)
+		console.log(`Gift: ${gift}`)
+		res.send('OK')
+	} catch(err) { console.log(err); }
 });
 
 app.get('*', (req, res) => {
