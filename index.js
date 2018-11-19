@@ -67,9 +67,6 @@ app.post('/webhooks', async (req, res, next) => {
 		const cartTotal = cartOnDeck.data.cart_amount;
 		const lineItems = cartOnDeck.data.line_items.physical_items;
 		const giftFound = lineItems.find(el => el.product_id === 112);
-		const giftReferenceID = giftFound.id;
-		console.log("Found the Gift. ReferenceID:")
-		console.log(giftReferenceID)
 
 		const eligibleForGift = (cartTotal >= 40 && !giftFound);
 		const giftRemovalRequired = (cartTotal < 40 && giftFound);
@@ -94,6 +91,7 @@ app.post('/webhooks', async (req, res, next) => {
 			});
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
+				const giftReferenceID = giftFound.id;
 				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${giftReferenceID}`;
 				const giftRemovedCart = await rp(switchBoard.giftRemoval).json();
 		} else {
