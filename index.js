@@ -25,13 +25,6 @@ app.post('/webhooks', async (req, res, next) => {
 				headers: AuthHeaders,
 				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`,
 			},
-			giftEntry: {
-				method: 'POST',
-				headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
-				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
-				body: JSON.stringify(gift),
-				json: true,
-			},
 			giftRemoval: {
 				method: 'DELETE',
 				headers: AuthHeaders,
