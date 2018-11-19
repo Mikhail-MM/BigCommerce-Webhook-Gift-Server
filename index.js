@@ -64,7 +64,11 @@ app.post('/webhooks', async (req, res, next) => {
 
 		res.send('OK');
 
-	} catch(err) { console.log(err); }
+	} catch(err) { 
+		// Always send OK to avoid hanging webhooks API
+		res.send('OK but PROBLEM')
+		console.log(err); 
+	}
 });
 
 app.get('*', (req, res) => {
