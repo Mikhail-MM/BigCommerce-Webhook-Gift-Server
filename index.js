@@ -68,7 +68,7 @@ app.post('/webhooks', async (req, res, next) => {
 			console.log("Cart Eligible for Gift.")
 			const giftAddedCart = await rp(switchBoard.giftEntry).json();
 			console.log("Cart updated with gift.")
-			console.log(giftAddedCart);
+			console.log(giftAddedCart.body.errors);
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
 			const gift = giftItems[0];
