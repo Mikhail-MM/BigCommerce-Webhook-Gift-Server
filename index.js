@@ -35,7 +35,7 @@ app.post('/webhooks', async (req, res, next) => {
 		const cartOnDeck = await rp(switchBoard.cartLookUp).json();
 		console.log(cartOnDeck)
 		const totalPrice = cartOnDeck.data.cart_amount;
-		const gift = cartOnDeck.data.custom_items;
+		const gift = cartOnDeck.data.line_items:.custom_items;
 		console.log(`Cart has ${totalPrice}`);
 		console.log(`Gift: ${gift}`);
 		res.send('OK')
