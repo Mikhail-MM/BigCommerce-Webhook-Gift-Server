@@ -17,6 +17,16 @@ const initailizeHooks = () => {
 }
 
 const storeHash = 'h3sfhsws7q'
+const customGiftBody = {
+    "custom_items": [
+        {
+            "name": "FREE GIFT: Miniature Home Terrarium",
+            "sku": "GIFT-AZXt",
+            "quantity": 1,
+            "list_price": 0
+        }
+    ]
+};
 
 app.post('/webhooks', async (req, res, next) => {
 	try {
@@ -55,39 +65,36 @@ app.post('/webhooks', async (req, res, next) => {
 		const cartOnDeck = await rp(switchBoard.cartLookUp).json();
 		
 		const cartTotal = cartOnDeck.data.cart_amount;
-		const giftItems = cartOnDeck.data.line_items.custom_items;
-		
-		if (giftItems.length > 0) {
-			console.log("Logging Gift");
-			console.log(giftItems[0]);
-		}
+		const lineItems = cartOnDeck.data.line_items.physical_items;
+		const giftFound = lineItems.find(el => el.product_id === 112);
+		const giftReferenceID = giftFound.id;
+		console.log("Found the Gift. ReferenceID:")
+		console.log(giftReferenceID)
 
-		const eligibleForGift = (cartTotal >= 40 && giftItems.length === 0);
-		const giftRemovalRequired = (cartTotal < 40 && giftItems.length > 0);
+		const eligibleForGift = (cartTotal >= 40 && !giftFound);
+		const giftRemovalRequired = (cartTotal < 40 && giftFound);
 		
 		console.log(`Cart total: ${cartTotal}`);
 		
 		if (eligibleForGift) {
 			console.log("Cart Eligible for Gift.")
 			const response = await axios({
-				  method: 'post',
-				  url: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
-				  headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
-				  data: {
-				    "custom_items": [
-				        {
-				            "name": "Miniature Home Terrarium",
-				            "sku": "GIFT-AZXt",
-				            "quantity": 1,
-				            "list_price": 0
-				        }
-				    ]
+				method: 'post',
+				url: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
+				headers: {...AuthHeaders, ['Content-Type']: 'application/json'},
+				data: {
+					"line_items": [
+					    {
+					    	"quantity": 1,
+					    	"product_id": 112,
+					    	"list_price": 0
+					    }
+					]
 				}
 			});
 		} else if (giftRemovalRequired) {
 			console.log("Need to remove gift.")
-			const gift = giftItems[0];
-				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${gift.id}`;
+				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${giftReferenceID}`;
 				const giftRemovedCart = await rp(switchBoard.giftRemoval).json();
 		} else {
 			console.log("No post-webhook actions required.");
