@@ -32,7 +32,7 @@ app.post('/webhooks', async (req, res, next) => {
 			}
 		}
 
-		const cartOnDeck = await rp(switchBoard.cartLookUp);
+		const cartOnDeck = await rp(switchBoard.cartLookUp).json();
 		console.log(cartOnDeck)
 		const totalPrice = cartOnDeck.data.cart_amount;
 		const gift = cartOnDeck.data.custom_items[0]
