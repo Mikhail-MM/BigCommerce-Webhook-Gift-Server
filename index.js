@@ -16,10 +16,12 @@ const initailizeHooks = () => {
 }
 
 const storeHash = 'h3sfhsws7q'
+
 app.post('/webhooks', async (req, res, next) => {
 	try {
+		console.log("Webhook Response")
 		const cartID = req.body.data.cartId
-
+		console.log(req.body)
 		const switchBoard = {
 			cartLookUp: {
 				method: 'GET',
@@ -59,7 +61,8 @@ app.post('/webhooks', async (req, res, next) => {
 			console.log(giftItems[0])
 		}
 
-		const eligibleForGift = (cartTotal >= 40 && giftItems.length > 0);
+		console.log(eligibleForGift)
+		const eligibleForGift = (cartTotal >= 40 && giftItems.length === 0);
 		const giftRemovalRequired = (cartTotal < 40 && giftItems.length > 0);
 		
 		console.log(`Cart total: ${cartTotal}`);
