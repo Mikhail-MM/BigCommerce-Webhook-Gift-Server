@@ -6,9 +6,10 @@ const app = express();
 
 app.use(bodyParser.json())
 
-const specialGift = {
-
-};
+const AuthHeaders = {
+	['X-Auth-Client']: process.env.X_AUTH_CLIENT,
+	['X-Auth-Token']: process.env.X_AUTH_TOKEN
+}
 
 const initailizeHooks = () => {
 
@@ -17,28 +18,67 @@ const initailizeHooks = () => {
 const storeHash = 'h3sfhsws7q'
 app.post('/webhooks', async (req, res, next) => {
 	try {
-		console.log("Hook Received.");
-		console.log(req.body);
 		const cartID = req.body.data.cartId
 
 		const switchBoard = {
 			cartLookUp: {
 				method: 'GET',
-				headers: {
-					['X-Auth-Client']: process.env.X_AUTH_CLIENT,
-					['X-Auth-Token']: process.env.X_AUTH_TOKEN,
-				},
+				headers: AuthHeaders,
 				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}`,
-			}
+			},
+			giftEntry: {
+				method: 'POST',
+				headers: AuthHeaders,
+				uri: `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items`,
+				body: {
+					custom_items: [
+						{
+							name: '[REWARD]: Miniature Home Terrarium',
+							sku: 'GIFT-AZXt',
+							quantity: 1,
+							list_price: 0,
+							image_url: 'https://cdn11.bigcommerce.com/s-h3sfhsws7q/images/stencil/500x659/products/81/273/roundterrariumsmall.1435946629.jpg',
+						},
+					],
+				},
+				json: true,
+			},
+			giftRemoval: {
+				method: 'DELETE',
+				headers: AuthHeaders,
+			},
 		}
 
 		const cartOnDeck = await rp(switchBoard.cartLookUp).json();
-		console.log(cartOnDeck)
-		const totalPrice = cartOnDeck.data.cart_amount;
-		const gift = cartOnDeck.data.line_items.custom_items;
-		console.log(`Cart has ${totalPrice}`);
-		console.log(`Gift: ${gift}`);
+		
+		const cartTotal = cartOnDeck.data.cart_amount;
+		const giftItems = cartOnDeck.data.line_items.custom_items;
+		
+		if (giftItems.length > 0) {
+			console.log("Logging Gift")
+			console.log(giftItems[0])
+		}
+
+		const eligibleForGift = (cartTotal >= 40 && giftItems.length > 0);
+		const giftRemovalRequired = (cartTotal < 40 && giftItems.length > 0);
+		
+		console.log(`Cart total: ${totalPrice}`);
+		
+		if (eligibleForGift) {
+			console.log("Cart Eligible for Gift.")
+			const giftAddedCart = await rp(switchBoard.giftEntry).json();
+			console.log("Cart updated with gift.")
+			console.log(giftAddedCart);
+		} else if (giftRemovalRequired) {
+			console.log("Need to remove gift.")
+			const gift = giftItems[0];
+				switchBoard.giftRemoval.uri = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts/${cartID}/items/${gift.id}`
+				const giftRemovedCart = await rp(switchBoard.giftRemoval).json();
+		} else {
+			console.log("No post-webhook actions required.")
+		}
 		res.send('OK')
+
 	} catch(err) { console.log(err); }
 });
 
