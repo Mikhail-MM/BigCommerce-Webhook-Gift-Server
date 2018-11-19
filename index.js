@@ -62,7 +62,7 @@ app.post('/webhooks', async (req, res, next) => {
 		const eligibleForGift = (cartTotal >= 40 && giftItems.length > 0);
 		const giftRemovalRequired = (cartTotal < 40 && giftItems.length > 0);
 		
-		console.log(`Cart total: ${totalPrice}`);
+		console.log(`Cart total: ${cartTotal}`);
 		
 		if (eligibleForGift) {
 			console.log("Cart Eligible for Gift.")
