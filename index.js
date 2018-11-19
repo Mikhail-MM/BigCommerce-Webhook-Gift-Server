@@ -14,29 +14,8 @@ const AuthHeaders = {
 
 const storeHash = 'h3sfhsws7q'
 
-const customGiftBody = {
-    "custom_items": [
-        {
-            "name": "FREE GIFT: Miniature Home Terrarium",
-            "sku": "GIFT-AZXt",
-            "quantity": 1,
-            "list_price": 0
-        }
-    ]
-};
-
 app.post('/webhooks', async (req, res, next) => {
 	try {
-		const gift = {
-		    "custom_items": [
-		        {
-		            "name": "Miniature Home Terrarium",
-		            "sku": "GIFT-AZXt",
-		            "quantity": 1,
-		            "list_price": 0
-		        }
-		    ]
-		}
 
 		const cartID = req.body.data.cartId;
 		
